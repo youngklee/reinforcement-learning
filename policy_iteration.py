@@ -2,7 +2,9 @@ import numpy as np
 from policy_eval import policy_eval
 from lib.envs.gridworld import GridworldEnv
 
-def policy_improvement(policy, env, policy_eval_fn=policy_eval, gamma=1.0):
+def policy_improvement(env, policy_eval_fn=policy_eval, gamma=1.0):
+    # Start with a random policy
+    policy = np.ones([env.nS, env.nA])/env.nA
     while True:
         V = policy_eval_fn(policy, env, gamma)
         stable = True
@@ -22,8 +24,7 @@ def policy_improvement(policy, env, policy_eval_fn=policy_eval, gamma=1.0):
 
 if __name__ == '__main__':
     env = GridworldEnv()
-    random_policy = np.ones([env.nS, env.nA])/env.nA
-    policy, v = policy_improvement(random_policy, env)
+    policy, v = policy_improvement(env)
     print('Policy:\n{}'.format(policy))
     print('Reshaped Grid Policy (0=up, 1=right, 2=down, 3=left):\n{}'.format(
         np.reshape(np.argmax(policy, axis=1), env.shape)))
